@@ -15,12 +15,31 @@ class File(BaseType):
         self.is_output = is_output
 
     def to_gradio(self):
-        if self.name == '':
-            return gradio.File(show_label=False, type='bytes')
+        if self.name == "":
+            return gradio.File(show_label=False, type="bytes")
         else:
-            return gradio.File(label=self.name, type='bytes')
+            return gradio.File(label=self.name, type="bytes")
 
-    def to_qt(self, kind: Literal['input', 'output']):
+    def to_qt(self, kind: Literal["input", "output"]):
+        return QtFileUI(name=self.name, kind=kind)
+
+
+class MusicFile(File):
+    """Music File UI type."""
+
+    # https://gradio.app/docs/#audio
+
+    def __init__(self, is_output=False, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.is_output = is_output
+
+    def to_gradio(self):
+        if self.name == "":
+            return gradio.Audio(show_label=False, type="numpy")
+        else:
+            return gradio.Audio(label=self.name, type="numpy")
+
+    def to_qt(self, kind: Literal["input", "output"]):
         return QtFileUI(name=self.name, kind=kind)
 
 
@@ -31,12 +50,12 @@ class ImageFile(File):
         super().__init__(**kwargs)
 
     def to_gradio(self):
-        if self.name == '':
-            return gradio.Image(show_label=False, type='numpy')
+        if self.name == "":
+            return gradio.Image(show_label=False, type="numpy")
         else:
-            return gradio.Image(label=self.name, type='numpy')
+            return gradio.Image(label=self.name, type="numpy")
 
-    def to_qt(self, kind: Literal['input', 'output']):
+    def to_qt(self, kind: Literal["input", "output"]):
         return QtImageUI(name=self.name, kind=kind)
 
 
@@ -56,15 +75,13 @@ class TimeSeriesCSVFile(CSVFile):
         self.values = values
 
     def to_gradio(self):
-        if self.name == '':
-            return gradio.TimeSeries(x=self.time, y=self.values,
-                                     show_label=False)
+        if self.name == "":
+            return gradio.TimeSeries(x=self.time, y=self.values, show_label=False)
         else:
-            return gradio.TimeSeries(x=self.time, y=self.values,
-                                     label=self.name)
+            return gradio.TimeSeries(x=self.time, y=self.values, label=self.name)
 
-    def to_qt(self, kind: Literal['input', 'output']):
+    def to_qt(self, kind: Literal["input", "output"]):
         raise NotImplementedError(
-            'A qt UI is not implemented for TimeSeriesCSVFile class. '
-            'Please use CSVFile or File as input or output Type.'
+            "A qt UI is not implemented for TimeSeriesCSVFile class. "
+            "Please use CSVFile or File as input or output Type."
         )
