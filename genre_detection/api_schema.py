@@ -1,11 +1,9 @@
 from typing import List
 from pydantic import BaseModel
 
+
 class APIRequest(BaseModel):
-    dtype: str
-    shape: List[int]
-    image: str
-    bins: int
+    music_array: str
 
 
 class Histogram(BaseModel):

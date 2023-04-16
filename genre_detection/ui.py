@@ -15,13 +15,14 @@ class BeatBotUI(GradioEasyMLUI):
         print("audio data as a 16-bit int array whose values range from -32768 to 32767: ")
         print(file[1])
         print("---------------------------------")
-        return {"music_array": file[1]}
+        #TODO: send array?
+        return {"music_array": "test"}
 
     def process_response(self, request: APIRequest, response: APIResponse) -> Plot:
         """Process REST API response by searching the image."""
         genre = response["genre"]
         #TODO Image search
-        path_to_img=''
+        path_to_img='assets/favicon.ico'
         return genre, path_to_img
 
 
