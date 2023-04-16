@@ -20,7 +20,7 @@ if __name__ == '__main__':
         'allow_flagging': 'never'
     }
     gradio_launch_args = {
-        'server_name': 'localhost',
+        'server_name': '0.0.0.0',
         'server_port': 8080,
         'favicon_path':"assets/favicon.ico",
     }
