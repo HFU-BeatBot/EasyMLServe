@@ -1,7 +1,6 @@
 from typing import List
 from pydantic import BaseModel
 
-
 class APIRequest(BaseModel):
     dtype: str
     shape: List[int]
@@ -16,7 +15,4 @@ class Histogram(BaseModel):
 
 
 class APIResponse(BaseModel):
-    shape: List[int]
-    r: Histogram
-    g: Histogram
-    b: Histogram
+    genre: str
