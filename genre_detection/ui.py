@@ -23,8 +23,10 @@ class BeatBotUI(GradioEasyMLUI):
     def process_response(self, request: APIRequest, response: APIResponse) -> Plot:
         """Process REST API response by searching the image."""
         genre = response["genre"]
-        # TODO Image search
-        path_to_img = "assets/favicon.ico"
+        path_to_img =  "assets/genres/404.png"
+        if (genre in ("blues classical country disco hiphop jazz metal pop reggae rock").split()):
+            path_to_img = "assets/genres/" + genre + ".png"
+        
         return genre, path_to_img
 
 
