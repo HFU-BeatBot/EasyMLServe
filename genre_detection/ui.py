@@ -8,14 +8,28 @@ class BeatBotUI(GradioEasyMLUI):
     """
     This UI accepts any music file, process it and shows the genre of the music
     """
-    pass
+
+    def prepare_request(self, file:tuple) -> APIRequest:
+        print("---------------------------------")
+        print("sample rate in Hz: "+str(file[0]))
+        print("audio data as a 16-bit int array whose values range from -32768 to 32767: ")
+        print(file[1])
+        print("---------------------------------")
+        return {"music_array": file[1]}
+
+    def process_response(self, request: APIRequest, response: APIResponse) -> Plot:
+        """Process REST API response by searching the image."""
+        genre = response["genre"]
+        #TODO Image search
+        path_to_img=''
+        return genre, path_to_img
 
 
 if __name__ == '__main__':
     input_schema = {        
         'file': MusicFile(name='Music File'),
     }
-    output_schema = [Text(name='Recognized genre')]
+    output_schema = [Text(name='Recognized genre'), ImageFile(name='Genre Image')]
     gradio_interface_args = {
         'allow_flagging': 'never'
     }
