@@ -13,3 +13,5 @@ matplotlib
 setuptools
 scikit-learn
 pydantic
+joblib
+tensorflow
