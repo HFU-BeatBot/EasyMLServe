@@ -21,10 +21,10 @@ class BeatBotUI(GradioEasyMLUI):
         """Process REST API response by searching the image."""
         genre = response["genre"]
         path_to_img =  "assets/genres/404.png"
-        if (genre in ("blues classical country disco hiphop jazz metal pop reggae rock").split()):
+        if (genre in ("Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock").split()):
             path_to_img = "assets/genres/" + genre + ".png"
 
-        return genre, path_to_img, response["confidence"] * 100
+        return genre, path_to_img, response["confidence"]
 
     def preprocess_music(self, songname: str) -> np.ndarray:
         # load scaler
@@ -55,8 +55,8 @@ if __name__ == "__main__":
     }
     output_schema = [
         Text(name="Recognized genre"),
-        ImageFile(name="Genre Image"),
-        Range(0, 100, float, name="Confidence"),
+        ImageFile(),
+        Range(0, 1, float, name="Confidence"),
     ]
     gradio_interface_args = {"allow_flagging": "never"}
     gradio_launch_args = {

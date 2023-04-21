@@ -49,7 +49,7 @@ class Text(BaseType):
         if self.name == '':
             return gradio.Textbox(lines=1, show_label=False)
         else:
-            return gradio.Textbox(label=self.name, lines=5)
+            return gradio.Textbox(label=self.name, lines=1)
 
     def to_qt(self, kind: Literal['input', 'output']):
         return QtTextUI(name=self.name, kind=kind)
@@ -110,7 +110,7 @@ class Range(BaseType):
         self.minimum = minimum
         self.maximum = maximum
         self.dtype = dtype
-        if isinstance(dtype, float):
+        if dtype is float:
             self.step = 0.01
         else:
             self.step = 1

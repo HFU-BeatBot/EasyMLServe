@@ -22,7 +22,7 @@ class GenreDetectionService(EasyMLService):
         genre = np.argmax(prediction[0])
         confidence = prediction[0][genre]
 
-        genre = ("blues classical country disco hiphop jazz metal pop reggae rock").split()[genre]
+        genre = ("Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock").split()[genre]
         return {"genre": genre, "confidence": confidence}
 
 
