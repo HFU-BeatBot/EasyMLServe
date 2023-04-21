@@ -1,6 +1,5 @@
-import os
-
 import numpy as np
+import tensorflow as tf
 
 from easymlserve import EasyMLServer, EasyMLService
 
@@ -8,20 +7,16 @@ from api_schema import APIRequest, APIResponse
 
 
 class GenreDetectionService(EasyMLService):
-    """Histogram calculation example service."""
+    """Genre detection service."""
 
     def load_model(self):
-        model_path = os.path.join("model", "model.xml")
-        # TODO Save to self.model
+        self.model = tf.keras.models.load_model("model.h5")
 
     def process(self, request: APIRequest) -> APIResponse:
         """Process REST API request and return genre."""
-        # TODO get genre
-        # detections = self.model.detectGenre(request)
+        prediction = self.model.predict(request.music_array)
 
-        response = {"genre": "metal"}
-        print(response)
-        return response
+        return {"genre": prediction}
 
 
 service = GenreDetectionService()
