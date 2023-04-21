@@ -35,9 +35,9 @@ class MusicFile(File):
 
     def to_gradio(self):
         if self.name == "":
-            return gradio.Audio(show_label=False, type="numpy")
+            return gradio.Audio(show_label=False, type="filepath")
         else:
-            return gradio.Audio(label=self.name, type="numpy")
+            return gradio.Audio(label=self.name, type="filepath")
 
     def to_qt(self, kind: Literal["input", "output"]):
         return QtFileUI(name=self.name, kind=kind)

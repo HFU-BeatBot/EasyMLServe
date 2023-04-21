@@ -9,15 +9,8 @@ class BeatBotUI(GradioEasyMLUI):
     This UI accepts any music file, process it and shows the genre of the music
     """
 
-    def prepare_request(self, file: tuple) -> APIRequest:
-        print("---------------------------------")
-        print("sample rate in Hz: " + str(file[0]))
-        print(
-            "audio data as a 16-bit int array whose values range from -32768 to 32767: "
-        )
-        print(file[1])
-        print("---------------------------------")
-        # TODO: send array?
+    def prepare_request(self, path: str) -> APIRequest:
+        print(path)
         return {"music_array": "test"}
 
     def process_response(self, request: APIRequest, response: APIResponse) -> Plot:
