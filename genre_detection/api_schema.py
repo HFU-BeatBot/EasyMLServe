@@ -3,14 +3,9 @@ from pydantic import BaseModel
 
 
 class APIRequest(BaseModel):
-    music_array: str
-
-
-class Histogram(BaseModel):
-    counts: List[int]
-    rel_counts: List[float]
-    bins: List[float]
+    music_array: List[List[float]]
 
 
 class APIResponse(BaseModel):
     genre: str
+    confidence: float

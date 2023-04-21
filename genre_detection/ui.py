@@ -1,3 +1,4 @@
+import os
 import librosa as librosa
 
 from easymlserve.ui import GradioEasyMLUI, QtEasyMLUI
@@ -13,9 +14,8 @@ class BeatBotUI(GradioEasyMLUI):
     """
 
     def prepare_request(self, file: str) -> APIRequest:
-        print(file)
-        self.preprocess_music(file)
-        return {"music_array": "test"}
+        array = self.preprocess_music(file)
+        return {"music_array": array.tolist()}
 
     def process_response(self, request: APIRequest, response: APIResponse) -> Plot:
         """Process REST API response by searching the image."""
@@ -26,9 +26,9 @@ class BeatBotUI(GradioEasyMLUI):
         
         return genre, path_to_img
 
-    def preprocess_music(self, songname: str):
+    def preprocess_music(self, songname: str) -> np.ndarray:
         # load scaler
-        scaler = load('scaler.bin')
+        scaler = load(os.path.dirname(os.path.abspath(__file__)) + "/scaler.bin")
 
         # compute features from music file
         y, sr = librosa.load(songname, mono=True, duration=3)
@@ -42,7 +42,7 @@ class BeatBotUI(GradioEasyMLUI):
         array = [np.mean(chroma_stft), np.mean(rmse), np.mean(spec_cent), np.mean(spec_bw), np.mean(rolloff), np.mean(zcr)]
 
         for e in mfcc:
-             array.append(np.mean(e))
+            array.append(np.mean(e))
 
         np_array = np.array([array])
         np_array = scaler.transform(np_array)
