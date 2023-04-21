@@ -15,6 +15,7 @@ class BeatBotUI(GradioEasyMLUI):
 
     def prepare_request(self, file: str) -> APIRequest:
         array = self.preprocess_music(file)
+        os.remove(file)
         return {"music_array": array.tolist()}
 
     def process_response(self, request: APIRequest, response: APIResponse) -> Plot:
