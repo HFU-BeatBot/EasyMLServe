@@ -22,7 +22,7 @@ class BeatBotUI(GradioEasyMLUI):
         genre = response["genre"]
         path_to_img =  "assets/genres/404.png"
         if (genre in ("Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock").split()):
-            path_to_img = "assets/genres/" + genre + ".png"
+            path_to_img = "assets/genres/" + genre.lower() + ".png"
 
         return genre, path_to_img, response["confidence"]
 
