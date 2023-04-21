@@ -5,5 +5,11 @@ python-multipart
 fastapi[all]
 fastapi-utils
 uvicorn[standard]
-gradio==3.3
+gradio
 PyQt6
+librosa
+easymlserve
+matplotlib
+setuptools
+scikit-learn
+pydantic
