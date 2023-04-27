@@ -29,7 +29,7 @@ class BeatBotUI(GradioEasyMLUI):
         if (genre in ("Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock").split()):
             path_to_img = "assets/genres/" + genre.lower() + ".png"
 
-        return genre, path_to_img, float("{:.4f}".format(response["confidence"]))
+        return genre, path_to_img, float("{:.4f}".format(response["confidence"][genre]))
 
     def preprocess_music(self, songname: str) -> np.ndarray:
         # load scaler
