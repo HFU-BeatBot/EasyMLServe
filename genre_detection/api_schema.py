@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 
 class APIRequest(BaseModel):
-    music_array: List[List[float]]
+    music_array: List[float]
 
 
 class APIResponse(BaseModel):

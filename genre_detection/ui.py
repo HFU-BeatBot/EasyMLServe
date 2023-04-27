@@ -16,7 +16,7 @@ class BeatBotUI(GradioEasyMLUI):
     def prepare_request(self, file: str) -> APIRequest:
         array = self.preprocess_music(file)
         os.remove(file)
-        return {"music_array": array.tolist()}
+        return {"music_array": array[0].tolist()}
 
     def process_response(self, request: APIRequest, response: APIResponse) -> Plot:
         """Process REST API response by searching the image."""

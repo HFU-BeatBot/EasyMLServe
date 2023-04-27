@@ -17,7 +17,7 @@ class GenreDetectionService(EasyMLService):
 
     def process(self, request: APIRequest) -> APIResponse:
         """Process REST API request and return genre."""
-        prediction = self.model.predict(request.music_array)
+        prediction = self.model.predict([request.music_array])
 
         genre = np.argmax(prediction[0])
         confidence = prediction[0][genre]
