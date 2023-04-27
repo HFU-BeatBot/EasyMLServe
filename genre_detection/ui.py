@@ -6,6 +6,7 @@ from easymlserve.ui.type import *
 from joblib import load
 
 from api_schema import *
+from pandas import DataFrame
 
 
 class BeatBotUI(GradioEasyMLUI):
@@ -29,7 +30,11 @@ class BeatBotUI(GradioEasyMLUI):
         if (genre in ("Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock").split()):
             path_to_img = "assets/genres/" + genre.lower() + ".png"
 
-        return genre, path_to_img, float("{:.4f}".format(response["confidences"][genre]))
+        data = DataFrame()
+        data["Genre"] = response["confidences"].keys()
+        data["Confidence"] = response["confidences"].values()
+
+        return (genre,path_to_img,float("{:.4f}".format(response["confidences"][genre])),data)
 
     def preprocess_music(self, songname: str) -> np.ndarray:
         # load scaler
@@ -63,6 +68,7 @@ if __name__ == "__main__":
         Text(name="Recognized genre"),
         ImageFile(),
         Range(0, 1, float, name="Confidence"),
+        BarPlot(name="Confidences", x_label="Genre", y_label="Confidence", vertical=False)
     ]
     gradio_interface_args = {"allow_flagging": "never"}
     gradio_launch_args = {

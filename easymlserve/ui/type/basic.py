@@ -127,6 +127,23 @@ class Range(BaseType):
         return QtSliderUI(self.minimum, self.maximum, self.step,
                           name=self.name, kind=kind)
 
+class BarPlot(BaseType):
+    """Bar Plot UI type."""
+
+    def __init__(self, x_label:str, y_label:str, vertical:bool=True, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.x_label=x_label
+        self.y_label=y_label
+
+    def to_gradio(self):
+        if self.name == '':            
+            return gradio.BarPlot(show_label=False, x=self.x_label, y=self.y_label, vertical=False)
+        else:
+            return gradio.BarPlot(label=self.name, x=self.x_label, y=self.y_label, vertical=False)
+
+    def to_qt(self, kind: Literal['input', 'output']):
+        return None
+
 
 class SingleChoice(BaseType):
     """Single choice UI type."""
