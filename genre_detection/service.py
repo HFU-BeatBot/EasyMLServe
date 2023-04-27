@@ -32,12 +32,12 @@ class GenreDetectionService(EasyMLService):
 
         genres = ("Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock").split()
 
-        confidence = dict()
+        confidences = dict()
 
         for x in range(len(genres)):
-            confidence[genres[x]] = float(prediction[0][x])
+            confidences[genres[x]] = float(prediction[0][x])
 
-        return {"genre": genres[genre], "confidence": confidence}
+        return {"genre": genres[genre], "confidences": confidences}
 
 
 service = GenreDetectionService()

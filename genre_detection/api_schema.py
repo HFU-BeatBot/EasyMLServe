@@ -9,4 +9,4 @@ class APIRequest(BaseModel):
 
 class APIResponse(BaseModel):
     genre: str
-    confidence: dict
+    confidences: dict
