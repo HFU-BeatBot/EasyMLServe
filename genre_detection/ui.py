@@ -13,10 +13,14 @@ class BeatBotUI(GradioEasyMLUI):
     This UI accepts any music file, process it and shows the genre of the music
     """
 
-    def prepare_request(self, file: str) -> APIRequest:
-        array = self.preprocess_music(file)
-        os.remove(file)
-        return {"music_array": array[0].tolist()}
+    def prepare_request(self, file: str, music_array: str) -> APIRequest:
+        if file:
+            array = self.preprocess_music(file)
+            os.remove(file)
+            return {"use_python_model": True, "music_array": array[0].tolist()}
+        elif music_array:
+            array = music_array.split(",")
+            return {"music_array": array}
 
     def process_response(self, request: APIRequest, response: APIResponse) -> Plot:
         """Process REST API response by searching the image."""
@@ -53,6 +57,7 @@ class BeatBotUI(GradioEasyMLUI):
 if __name__ == "__main__":
     input_schema = {
         "file": MusicFile(name="Music File"),
+        "music_array": TextLong(name="Java Music Array"),
     }
     output_schema = [
         Text(name="Recognized genre"),

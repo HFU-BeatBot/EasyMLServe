@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 
 class APIRequest(BaseModel):
+    use_python_model: bool = False
     music_array: List[float]
 
 
