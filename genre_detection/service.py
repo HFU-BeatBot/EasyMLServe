@@ -11,14 +11,22 @@ class GenreDetectionService(EasyMLService):
     """Genre detection service."""
 
     def load_model(self):
-        self.model = tf.keras.models.load_model(
-            os.path.dirname(os.path.abspath(__file__)) + "/model.h5"
+        self.python_model = tf.keras.models.load_model(
+            os.path.dirname(os.path.abspath(__file__))
+            + "/model.h5"  # TODO: "/python_model.h5"
+        )
+
+        self.java_model = tf.keras.models.load_model(
+            os.path.dirname(os.path.abspath(__file__))
+            + "/model.h5"  # TODO: "/java_model.h5"
         )
 
     def process(self, request: APIRequest) -> APIResponse:
         """Process REST API request and return genre."""
-        prediction = self.model.predict([request.music_array])
-
+        if request.use_python_model:
+            prediction = self.python_model.predict([request.music_array])
+        else:
+            prediction = self.java_model.predict([request.music_array])
         genre = np.argmax(prediction[0])
         confidence = prediction[0][genre]
 
