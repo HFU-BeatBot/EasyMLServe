@@ -38,17 +38,11 @@ class BeatBotUI(GradioEasyMLUI):
     def preprocess_music(self, songname: str) -> np.ndarray:
         # compute features from music file
         y, sr = librosa.load(songname, mono=True, duration=3)
-        chroma_stft = librosa.feature.chroma_stft(y=y, sr=sr)
-        rmse = librosa.feature.rms(y=y)
-        spec_cent = librosa.feature.spectral_centroid(y=y, sr=sr)
-        spec_bw = librosa.feature.spectral_bandwidth(y=y, sr=sr)
-        rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr)
-        zcr = librosa.feature.zero_crossing_rate(y)
         mfcc = librosa.feature.mfcc(y=y, sr=sr)
-        array = [str(np.mean(chroma_stft)), str(np.mean(rmse)),str(np.mean(spec_cent)), str(np.mean(spec_bw)), str(np.mean(rolloff)), str(np.mean(zcr))]
-
+        array = []
         for e in mfcc:
             array.append(str(np.mean(e)))
+            array.append(str(np.std(e)))
 
         return array
 
