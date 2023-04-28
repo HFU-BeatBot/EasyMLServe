@@ -17,6 +17,7 @@ class BeatBotUI(GradioEasyMLUI):
         if file:
             array = self.preprocess_music(file)
             os.remove(file)
+            print(array)
             return {"use_python_model": True, "music_array": array}
         elif music_array:
             array = music_array.split(",")
@@ -45,10 +46,10 @@ class BeatBotUI(GradioEasyMLUI):
         rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr)
         zcr = librosa.feature.zero_crossing_rate(y)
         mfcc = librosa.feature.mfcc(y=y, sr=sr)
-        array = [np.mean(chroma_stft), np.mean(rmse), np.mean(spec_cent), np.mean(spec_bw), np.mean(rolloff), np.mean(zcr)]
+        array = [str(np.mean(chroma_stft)), str(np.mean(rmse)),str(np.mean(spec_cent)), str(np.mean(spec_bw)), str(np.mean(rolloff)), str(np.mean(zcr))]
 
         for e in mfcc:
-            array.append(np.mean(e))
+            array.append(str(np.mean(e)))
 
         return array
 
