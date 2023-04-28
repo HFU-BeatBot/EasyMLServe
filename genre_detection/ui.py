@@ -3,7 +3,6 @@ import librosa as librosa
 
 from easymlserve.ui import GradioEasyMLUI, QtEasyMLUI
 from easymlserve.ui.type import *
-from joblib import load
 
 from api_schema import *
 from pandas import DataFrame
@@ -18,7 +17,7 @@ class BeatBotUI(GradioEasyMLUI):
         if file:
             array = self.preprocess_music(file)
             os.remove(file)
-            return {"use_python_model": True, "music_array": array[0].tolist()}
+            return {"use_python_model": True, "music_array": array}
         elif music_array:
             array = music_array.split(",")
             return {"music_array": array}
@@ -37,9 +36,6 @@ class BeatBotUI(GradioEasyMLUI):
         return (genre,path_to_img,float("{:.4f}".format(response["confidences"][genre])),data)
 
     def preprocess_music(self, songname: str) -> np.ndarray:
-        # load scaler
-        scaler = load(os.path.dirname(os.path.abspath(__file__)) + "/scaler.bin")
-
         # compute features from music file
         y, sr = librosa.load(songname, mono=True, duration=3)
         chroma_stft = librosa.feature.chroma_stft(y=y, sr=sr)
@@ -54,9 +50,7 @@ class BeatBotUI(GradioEasyMLUI):
         for e in mfcc:
             array.append(np.mean(e))
 
-        np_array = np.array([array])
-        np_array = scaler.transform(np_array)
-        return np_array
+        return array
 
 
 if __name__ == "__main__":

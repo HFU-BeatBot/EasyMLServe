@@ -5,6 +5,7 @@ import tensorflow as tf
 from easymlserve import EasyMLServer, EasyMLService
 
 from api_schema import APIRequest, APIResponse
+from joblib import load
 
 
 class GenreDetectionService(EasyMLService):
@@ -23,12 +24,17 @@ class GenreDetectionService(EasyMLService):
 
     def process(self, request: APIRequest) -> APIResponse:
         """Process REST API request and return genre."""
+        # load scaler
+        scaler = load(os.path.dirname(os.path.abspath(__file__)) + "/scaler.bin")
+        
+        np_array = np.array([request.music_array])
+        np_array = scaler.transform(np_array)
+        
         if request.use_python_model:
-            prediction = self.python_model.predict([request.music_array])
+            prediction = self.python_model.predict(np_array)
         else:
-            prediction = self.java_model.predict([request.music_array])
+            prediction = self.java_model.predict(np_array)
         genre = np.argmax(prediction[0])
-        confidence = prediction[0][genre]
 
         genres = ("Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock").split()
 
