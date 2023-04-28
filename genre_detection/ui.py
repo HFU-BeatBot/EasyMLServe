@@ -17,7 +17,6 @@ class BeatBotUI(GradioEasyMLUI):
         if file:
             array = self.preprocess_music(file)
             os.remove(file)
-            print(array)
             return {"use_python_model": True, "music_array": array}
         elif music_array:
             array = music_array.split(",")
@@ -32,9 +31,9 @@ class BeatBotUI(GradioEasyMLUI):
 
         data = DataFrame()
         data["Genre"] = response["confidences"].keys()
-        data["Confidence"] = response["confidences"].values()
+        data["Genre Strength"] = response["confidences"].values()
 
-        return (genre,path_to_img,float("{:.4f}".format(response["confidences"][genre])),data)
+        return (genre,path_to_img,data)
 
     def preprocess_music(self, songname: str) -> np.ndarray:
         # compute features from music file
@@ -60,10 +59,9 @@ if __name__ == "__main__":
         "music_array": TextLong(name="Java Music Array"),
     }
     output_schema = [
-        Text(name="Recognized genre"),
+        Text(name="Recognized main genre"),
         ImageFile(),
-        Range(0, 1, float, name="Confidence"),
-        BarPlot(name="Confidences", x_label="Genre", y_label="Confidence", vertical=False)
+        BarPlot(x_label="Genre", y_label="Genre Strength", vertical=False)
     ]
     gradio_interface_args = {"allow_flagging": "never"}
     gradio_launch_args = {
