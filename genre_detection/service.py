@@ -22,14 +22,16 @@ class GenreDetectionService(EasyMLService):
             + "/model.h5"  # TODO: "/java_model.h5"
         )
 
+        # load scaler
+        self.scaler = load(os.path.dirname(
+            os.path.abspath(__file__)) + "/scaler.bin")
+
     def process(self, request: APIRequest) -> APIResponse:
         """Process REST API request and return genre."""
-        # load scaler
-        scaler = load(os.path.dirname(os.path.abspath(__file__)) + "/scaler.bin")
-        
+
         np_array = np.array([request.music_array])
-        np_array = scaler.transform(np_array)
-        
+        np_array = self.scaler.transform(np_array)
+
         if request.use_python_model:
             prediction = self.python_model.predict(np_array)
         else:
