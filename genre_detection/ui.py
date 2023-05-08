@@ -29,6 +29,12 @@ class BeatBotUI(GradioEasyMLUI):
         if (genre in ("Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock").split()):
             path_to_img = "assets/genres/" + genre.lower() + ".png"
 
+        while len(response["confidences"]) > 5:
+            min_key = min(
+                response["confidences"].keys(), key=lambda k: response["confidences"][k]
+            )
+            del response["confidences"][min_key]
+
         data = DataFrame()
         data["Genre"] = response["confidences"].keys()
         data["Genre Strength"] = response["confidences"].values()
