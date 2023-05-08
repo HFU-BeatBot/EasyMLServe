@@ -13,14 +13,14 @@ class BeatBotUI(GradioEasyMLUI):
     This UI accepts any music file, process it and shows the genre of the music
     """
 
-    def prepare_request(self, file: str, music_array: str) -> APIRequest:
+    def prepare_request(self, file: str, music_array: str, use_legacy_model: bool) -> APIRequest:
         if file:
             array = self.preprocess_music(file)
             os.remove(file)
-            return {"use_legacy_model": True, "music_array": array}
+            return {"use_legacy_model": use_legacy_model, "music_array": array}
         elif music_array:
             array = music_array.split(",")
-            return {"music_array": array}
+            return {"use_legacy_model": use_legacy_model, "music_array": array}
 
     def process_response(self, request: APIRequest, response: APIResponse) -> Plot:
         """Process REST API response by searching the image."""
@@ -57,11 +57,12 @@ if __name__ == "__main__":
     input_schema = {
         "file": MusicFile(name="Music File"),
         "music_array": TextLong(name="Java Music Array"),
+        "use_legacy_model": Checkbox(name="Use legacy model"),
     }
     output_schema = [
         Text(name="Recognized main genre"),
         ImageFile(),
-        BarPlot(x_label="Genre", y_label="Genre Strength", vertical=False)
+        BarPlot(x_label="Genre", y_label="Genre Strength", vertical=False),
     ]
     gradio_interface_args = {"allow_flagging": "never"}
     gradio_launch_args = {
