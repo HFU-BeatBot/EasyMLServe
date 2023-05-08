@@ -145,6 +145,23 @@ class BarPlot(BaseType):
     def to_qt(self, kind: Literal['input', 'output']):
         return None
 
+class Checkbox(BaseType):
+    """Checkbox UI type."""
+
+    def __init__(self,
+                 info: str=None,
+                 **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.info=info
+
+    def to_gradio(self):
+        if self.name == '':
+            return gradio.Checkbox(show_label=False, info=self.info)
+        else:
+            return gradio.Checkbox(label=self.name, info=self.info)
+
+    def to_qt(self, kind: Literal['input', 'output']):
+        return None
 
 class SingleChoice(BaseType):
     """Single choice UI type."""
