@@ -134,12 +134,13 @@ class BarPlot(BaseType):
         super().__init__(**kwargs)
         self.x_label=x_label
         self.y_label=y_label
+        self.vertical=vertical
 
     def to_gradio(self):
         if self.name == '':            
-            return gradio.BarPlot(show_label=False, x=self.x_label, y=self.y_label, vertical=False)
+            return gradio.BarPlot(show_label=False, x=self.x_label, y=self.y_label, vertical=self.vertical)
         else:
-            return gradio.BarPlot(label=self.name, x=self.x_label, y=self.y_label, vertical=False)
+            return gradio.BarPlot(label=self.name, x=self.x_label, y=self.y_label, vertical=self.vertical)
 
     def to_qt(self, kind: Literal['input', 'output']):
         return None
