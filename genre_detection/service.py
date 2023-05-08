@@ -12,40 +12,61 @@ class GenreDetectionService(EasyMLService):
     """Genre detection service."""
 
     def load_model(self):
-        self.python_model = tf.keras.models.load_model(
+        # load legacy scaler
+        self.legacy_model = tf.keras.models.load_model(
             os.path.dirname(os.path.abspath(__file__))
-            + "/model.h5"  # TODO: "/python_model.h5"
+            + "/model.h5"  # TODO: "/legacy_model.h5"
         )
 
-        self.java_model = tf.keras.models.load_model(
+        # load mfa model
+        self.mfa_model = tf.keras.models.load_model(
             os.path.dirname(os.path.abspath(__file__))
-            + "/model.h5"  # TODO: "/java_model.h5"
+            + "/model.h5"  # TODO: "/mfa_model.h5"
         )
 
-        # load scaler
-        self.scaler = load(os.path.dirname(
-            os.path.abspath(__file__)) + "/scaler.bin")
+        # load legacy scaler
+        self.legacy_scaler = load(
+            os.path.dirname(os.path.abspath(__file__))
+            + "/scaler.bin"  # TODO: "/legacy_scaler.bin
+        )
+
+        # load mfa scaler
+        self.mfa_scaler = load(
+            os.path.dirname(os.path.abspath(__file__))
+            + "/scaler.bin"  # TODO: "/mfa_scaler.bin
+        )
 
     def process(self, request: APIRequest) -> APIResponse:
         """Process REST API request and return genre."""
 
         np_array = np.array([request.music_array])
-        np_array = self.scaler.transform(np_array)
 
-        if request.use_python_model:
-            prediction = self.python_model.predict(np_array)
+        if request.use_legacy_model:
+            genres = "Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock"
+            main_genre, confidences = self.get_return_values(
+                np_array, self.legacy_scaler, self.legacy_model, genres
+            )
         else:
-            prediction = self.java_model.predict(np_array)
+            genres = "Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock"
+            main_genre, confidences = self.get_return_values(
+                np_array, self.mfa_scaler, self.mfa_model, genres
+            )
+
+        return {"genre": main_genre, "confidences": confidences}
+
+    def get_return_values(self, np_array, scaler, model, genres):
+        np_array = scaler.transform(np_array)
+        prediction = model.predict(np_array)
         genre = np.argmax(prediction[0])
 
-        genres = ("Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock").split()
+        genres = genres.split()
 
         confidences = dict()
 
         for x in range(len(genres)):
             confidences[genres[x]] = float(prediction[0][x])
 
-        return {"genre": genres[genre], "confidences": confidences}
+        return genres[genre], confidences
 
 
 service = GenreDetectionService()

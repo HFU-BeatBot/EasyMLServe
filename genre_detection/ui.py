@@ -17,7 +17,7 @@ class BeatBotUI(GradioEasyMLUI):
         if file:
             array = self.preprocess_music(file)
             os.remove(file)
-            return {"use_python_model": True, "music_array": array}
+            return {"use_legacy_model": True, "music_array": array}
         elif music_array:
             array = music_array.split(",")
             return {"music_array": array}
