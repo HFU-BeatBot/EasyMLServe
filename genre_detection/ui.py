@@ -1,4 +1,5 @@
 import os
+from typing import List
 import librosa as librosa
 
 from easymlserve.ui import GradioEasyMLUI, QtEasyMLUI
@@ -13,14 +14,60 @@ class BeatBotUI(GradioEasyMLUI):
     This UI accepts any music file, process it and shows the genre of the music
     """
 
-    def prepare_request(self, file: str, music_array: str, use_legacy_model: bool) -> APIRequest:
+    def clicked(self, *kwargs) -> List:
+        """Gradio clicked process event to prepare and send REST API request.
+
+        Returns:
+            List: List of UI elements to display.
+        """
+        parent_kwargs = {}
+        for i, key in enumerate(self.input_schema):
+            parent_kwargs[key] = kwargs[i]
+
+        file = parent_kwargs["file"]
+        music_array = parent_kwargs["music_array"]
+        use_legacy_model = parent_kwargs["use_legacy_model"]
+
         if file:
-            array = self.preprocess_music(file)
+            arrays = self.preprocess_music(file)
+            sum_array = {}
+            for array in arrays:
+                request = self.prepare_request(array, use_legacy_model)
+                response = self.call_process_api(request)
+
+                # sum up all confidences
+                for x in response["confidences"]:
+                    if x in sum_array.keys():
+                        sum_array[x] += response["confidences"][x]
+                    else:
+                        sum_array[x] = response["confidences"][x]
+
+            # mean of all confidences
+            for key in sum_array.keys():
+                sum_array[key] /= len(arrays)
+            response = {
+                "genre": max(sum_array, key=sum_array.get),
+                "confidences": sum_array,
+            }
+
+            # Delete the temorary file
             os.remove(file)
-            return {"use_legacy_model": use_legacy_model, "music_array": array}
+
         elif music_array:
-            array = music_array.split(",")
-            return {"use_legacy_model": use_legacy_model, "music_array": array}
+            request = self.prepare_request(**parent_kwargs)
+            response = self.call_process_api(request)
+
+        else:
+            # Create little help text
+            response = {
+                "genre": "You should really upload a song or paste in a song array :-)",
+                "confidences": {},
+            }
+
+        return self.process_response(request, response)
+
+    def prepare_request(self, music_array: str, use_legacy_model: bool) -> APIRequest:
+        return {"use_legacy_model": use_legacy_model, "music_array": music_array}
 
     def process_response(self, request: APIRequest, response: APIResponse) -> Plot:
         """Process REST API response by searching the image."""
@@ -39,17 +86,39 @@ class BeatBotUI(GradioEasyMLUI):
         data["Genre"] = response["confidences"].keys()
         data["Genre Strength"] = response["confidences"].values()
 
-        return (genre,path_to_img,data)
+        return (genre, path_to_img, data)
 
-    def preprocess_music(self, songname: str) -> np.ndarray:
-        # compute features from music file
-        y, sr = librosa.load(songname, mono=True, duration=3)
+    def preprocess_music(self, file: str):
+        """Compute features of music file
+
+        Returns:
+            List: List of Music arrays.
+        """
+        max_duration = 5  # seconds
+        offset = 0
+        song_duration = librosa.get_duration(path=file)
+
+        arrays = list()
+
+        if song_duration < max_duration:
+            array = self.get_song_array(file)
+            arrays.append(array)
+            return arrays
+
+        while song_duration - offset > 5:
+            array = self.get_song_array(file, max_duration, offset)
+            arrays.append(array)
+            offset += max_duration
+
+        return arrays
+
+    def get_song_array(self, file, duration=None, offset=None):
+        y, sr = librosa.load(file, mono=True, duration=duration, offset=offset)
         mfcc = librosa.feature.mfcc(y=y, sr=sr)
         array = []
         for e in mfcc:
             array.append(str(np.mean(e)))
             array.append(str(np.std(e)))
-
         return array
 
 
