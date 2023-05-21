@@ -115,7 +115,7 @@ class BeatBotUI(GradioEasyMLUI):
             arrays.append(array)
             return arrays
 
-        while song_duration - offset > 5:
+        while song_duration - offset > max_duration:
             array = self.get_song_array(file, max_duration, offset)
             arrays.append(array)
             offset += max_duration
