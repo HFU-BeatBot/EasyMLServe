@@ -12,29 +12,22 @@ class GenreDetectionService(EasyMLService):
     """Genre detection service."""
 
     def load_model(self):
+        # get path
+        path_to_folder = os.path.dirname(os.path.abspath(__file__))
+
         # load legacy scaler
         self.legacy_model = tf.keras.models.load_model(
-            os.path.dirname(os.path.abspath(__file__))
-            + "/model.h5"  # TODO: "/legacy_model.h5"
+            path_to_folder + "/legacy_model.h5"
         )
 
-        # load mfa model
-        self.mfa_model = tf.keras.models.load_model(
-            os.path.dirname(os.path.abspath(__file__))
-            + "/model.h5"  # TODO: "/mfa_model.h5"
-        )
+        # load fma model
+        self.fma_model = tf.keras.models.load_model(path_to_folder + "/fma_model.h5")
 
         # load legacy scaler
-        self.legacy_scaler = load(
-            os.path.dirname(os.path.abspath(__file__))
-            + "/scaler.bin"  # TODO: "/legacy_scaler.bin
-        )
+        self.legacy_scaler = load(path_to_folder + "/legacy_scaler.bin")
 
-        # load mfa scaler
-        self.mfa_scaler = load(
-            os.path.dirname(os.path.abspath(__file__))
-            + "/scaler.bin"  # TODO: "/mfa_scaler.bin
-        )
+        # load fma scaler
+        self.fma_scaler = load(path_to_folder + "/fma_scaler.bin")
 
     def process(self, request: APIRequest) -> APIResponse:
         """Process REST API request and return genre."""
@@ -49,7 +42,7 @@ class GenreDetectionService(EasyMLService):
         else:
             genres = "Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock"
             main_genre, confidences = self.get_return_values(
-                np_array, self.mfa_scaler, self.mfa_model, genres
+                np_array, self.fma_scaler, self.fma_model, genres
             )
 
         return {"genre": main_genre, "confidences": confidences}
