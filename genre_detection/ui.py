@@ -72,7 +72,7 @@ class BeatBotUI(GradioEasyMLUI):
     def process_response(self, request: APIRequest, response: APIResponse) -> Plot:
         """Process REST API response by searching the image."""
         genre = response["genre"]
-        path_to_img = "assets/genres/404.png" # set default image (only shown when no genre image is available)
+        path_to_img = "assets/genres/404.png"  # set default image (only shown when no genre image is available)
 
         legacy_genres = ("Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock").split()
         mfa_genres = ("Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock").split()  # TODO: Use real genres when available
@@ -85,7 +85,7 @@ class BeatBotUI(GradioEasyMLUI):
         if genre in genres:
             path_to_img = "assets/genres/" + genre.lower() + ".png"
 
-        # remove the lowest values of confidences 
+        # remove the lowest values of confidences
         while len(response["confidences"]) > 5:
             min_key = min(
                 response["confidences"].keys(), key=lambda k: response["confidences"][k]
@@ -110,7 +110,7 @@ class BeatBotUI(GradioEasyMLUI):
 
         arrays = list()
 
-        if song_duration < max_duration:
+        if song_duration <= max_duration:
             array = self.get_song_array(file)
             arrays.append(array)
             return arrays
