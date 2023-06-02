@@ -1,6 +1,18 @@
 # EasyMLServe
 
-## Local Development
+## Use the website
+
+<details>
+<summary>Click when you are interested in how to use the website.</summary>
+
+![How To Use Website](assets/how_to_website.png)
+
+</details>
+<br>
+
+## Local Development (on Windows PC)
+
+### Install packages
 
 ```
 pip install -r requirements.txt
