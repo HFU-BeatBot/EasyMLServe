@@ -3,12 +3,11 @@
 ## Use the website
 
 <details>
-<summary>Click when you are interested in how to use the website.</summary>
+<summary>Click here when you are interested in how to use the website.</summary>
 
 ![How To Use Website](assets/how_to_website.png)
 
 </details>
-<br>
 
 ## Local Development (on Windows PC)
 
@@ -87,3 +86,13 @@ python genre_detection/service.py
 ```
 python genre_detection/ui.py
 ```
+
+## Related project
+
+Here's the original project where the code was coming from. We adapted a few things to match our needs.
+
+- [EasyMLServe](https://github.com/KIT-IAI/EasyMLServe/)
+
+## License
+
+This code is licensed under the [MIT License](https://github.com/KIT-IAI/EasyMLServe/blob/main/LICENSE).
