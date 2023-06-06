@@ -146,7 +146,7 @@ if __name__ == "__main__":
     gradio_launch_args = {
         "server_name": "0.0.0.0",
         "server_port": 8080,
-        "favicon_path": "assets/favicon.ico",
+        "favicon_path": "assets/beat_bot_icon.png",
     }
     app = BeatBotUI(
         name="HFU-BeatBot",
