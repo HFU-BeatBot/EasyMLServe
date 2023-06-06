@@ -173,10 +173,14 @@ class SingleChoice(BaseType):
         self.choices = choices
 
     def to_gradio(self):
-        if self.name == '':
-            return gradio.Radio(self.choices, show_label=False)
+        if self.name == "":
+            return gradio.Radio(
+                self.choices, value=self.choices[0], type="index", show_label=False
+            )
         else:
-            return gradio.Radio(self.choices, label=self.name)
+            return gradio.Radio(
+                self.choices, value=self.choices[0], type="index", label=self.name
+            )
 
     def to_qt(self, kind: Literal['input', 'output']):
         return QtSingleChoiceUI(self.choices, name=self.name, kind=kind)

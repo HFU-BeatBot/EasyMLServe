@@ -7,6 +7,8 @@ from easymlserve import EasyMLServer, EasyMLService
 from api_schema import APIRequest, APIResponse
 from joblib import load
 
+import constants
+
 
 class GenreDetectionService(EasyMLService):
     """Genre detection service."""
@@ -15,44 +17,45 @@ class GenreDetectionService(EasyMLService):
         # get path
         path_to_folder = os.path.dirname(os.path.abspath(__file__))
 
-        # load legacy scaler
-        self.legacy_model = tf.keras.models.load_model(
-            path_to_folder + "/legacy_model.h5"
+        # load gtzan model & scaler
+        self.gtzan_model = tf.keras.models.load_model(
+            path_to_folder + "/gtzan_model.h5"
         )
+        self.gtzan_scaler = load(path_to_folder + "/gtzan_scaler.bin")
 
-        # load fma model
+        # load fma model & scaler
         self.fma_model = tf.keras.models.load_model(path_to_folder + "/fma_model.h5")
-
-        # load legacy scaler
-        self.legacy_scaler = load(path_to_folder + "/legacy_scaler.bin")
-
-        # load fma scaler
         self.fma_scaler = load(path_to_folder + "/fma_scaler.bin")
+
+        # load jlibrosa model & scaler
+        self.jlibrosa_model = tf.keras.models.load_model(
+            path_to_folder + "/jlibrosa_model.h5"
+        )
+        self.jlibrosa_scaler = load(path_to_folder + "/jlibrosa_scaler.bin")
 
     def process(self, request: APIRequest) -> APIResponse:
         """Process REST API request and return genre."""
-
         np_array = np.array([request.music_array])
 
-        if request.use_legacy_model:
-            genres = "Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock"
+        if request.model_to_use == 1:  # Librosa FMA
             main_genre, confidences = self.get_return_values(
-                np_array, self.legacy_scaler, self.legacy_model, genres
+                np_array, self.fma_scaler, self.fma_model
             )
-        else:
-            genres = "Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock"
+        elif request.model_to_use == 2:  # JLibrosa GTZAN
             main_genre, confidences = self.get_return_values(
-                np_array, self.fma_scaler, self.fma_model, genres
+                np_array, self.jlibrosa_scaler, self.jlibrosa_model
+            )
+        else:  # Librosa GTZAN
+            main_genre, confidences = self.get_return_values(
+                np_array, self.gtzan_scaler, self.gtzan_model
             )
 
         return {"genre": main_genre, "confidences": confidences}
 
-    def get_return_values(self, np_array, scaler, model, genres):
+    def get_return_values(self, np_array, scaler, model, genres=constants.GENRES):
         np_array = scaler.transform(np_array)
         prediction = model.predict(np_array)
         genre = np.argmax(prediction[0])
-
-        genres = genres.split()
 
         confidences = dict()
 

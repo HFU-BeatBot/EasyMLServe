@@ -8,6 +8,8 @@ from easymlserve.ui.type import *
 from api_schema import *
 from pandas import DataFrame
 
+import constants
+
 
 class BeatBotUI(GradioEasyMLUI):
     """
@@ -26,13 +28,13 @@ class BeatBotUI(GradioEasyMLUI):
 
         file = parent_kwargs["file"]
         music_array = parent_kwargs["music_array"]
-        use_legacy_model = parent_kwargs["use_legacy_model"]
+        model_to_use = parent_kwargs["model_to_use"]
 
         if file:
             arrays = self.preprocess_music(file)
             sum_array = {}
             for array in arrays:
-                request = self.prepare_request(array, use_legacy_model)
+                request = self.prepare_request(array, model_to_use)
                 response = self.call_process_api(request)
 
                 # sum up all confidences
@@ -66,21 +68,15 @@ class BeatBotUI(GradioEasyMLUI):
 
         return self.process_response(request, response)
 
-    def prepare_request(self, music_array: str, use_legacy_model: bool) -> APIRequest:
-        return {"use_legacy_model": use_legacy_model, "music_array": music_array}
+    def prepare_request(self, music_array: str, model_to_use: int) -> APIRequest:
+        return {"model_to_use": model_to_use, "music_array": music_array}
 
     def process_response(self, request: APIRequest, response: APIResponse) -> Plot:
         """Process REST API response by searching the image."""
         genre = response["genre"]
         path_to_img = "assets/genres/404.png"  # set default image (only shown when no genre image is available)
 
-        legacy_genres = ("Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock").split()
-        mfa_genres = ("Blues Classical Country Disco HipHop Jazz Metal Pop Reggae Rock").split()  # TODO: Use real genres when available
-
-        if request["use_legacy_model"]:
-            genres = legacy_genres
-        else:
-            genres = mfa_genres
+        genres = constants.GENRES
 
         if genre in genres:
             path_to_img = "assets/genres/" + genre.lower() + ".png"
@@ -104,7 +100,7 @@ class BeatBotUI(GradioEasyMLUI):
         Returns:
             List: List of Music arrays.
         """
-        max_duration = 5  # seconds
+        max_duration = constants.TRAINED_MUSIC_DURATION_IN_SECONDS
         offset = 0
         song_duration = librosa.get_duration(path=file)
 
@@ -135,8 +131,11 @@ class BeatBotUI(GradioEasyMLUI):
 if __name__ == "__main__":
     input_schema = {
         "file": MusicFile(name="Music File"),
-        "music_array": TextLong(name="Java Music Array"),
-        "use_legacy_model": Checkbox(name="Use legacy model"),
+        "music_array": TextLong(name="Music Array"),
+        "model_to_use": SingleChoice(
+            name="Model to use",
+            choices=["Librosa - GTZAN", "Librosa - FMA", "JLibrosa - GTZAN"],
+        ),
     }
     output_schema = [
         Text(name="Recognized main genre"),
