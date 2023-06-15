@@ -39,7 +39,10 @@ python3.9.exe .\genre_detection\ui.py
 
 ## Setup Ubuntu VM
 
+Version: Ubuntu 22.04.2 LTS (GNU/Linux 5.15.0-72-generic x86_64)
+
 - Clone from Git repository
+- Go into repository folder (EasyMLServe)
 - Create virtual environment
 
 ```
@@ -59,7 +62,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-- Install missing packages on VM
+- Install missing packages on VM (May vary from system to system)
 
 ```
 sudo apt install libglu1-mesa
@@ -73,19 +76,32 @@ sudo apt install libegl1-mesa
 sudo apt install ffmpeg
 ```
 
-### Run
+### How to run the service and the website
 
-- Start service
+The service and the website are plain python files ([service.py](genre_detection/service.py) & [ui.py](genre_detection/ui.py)) and therefore can simply be started via terminal.<br>
+Accessing multiple terminals simultaneously can be achieved with [tmux](https://github.com/tmux/tmux/wiki).
 
-```
-python genre_detection/service.py
-```
-
-- Start user interface
+- Install tmux
 
 ```
-python genre_detection/ui.py
+sudo apt install tmux
 ```
+#### First setup
+
+1. Create session `tmux new -s beatbot`
+2. Split session `Press ctrl b and %`
+3. Navigate in both windows to `EasyMLServe` directory
+4. Activate venv in both windows `source venv/bin/activate`
+5. Start service in first window `python genre_detection/service.py`
+6. Start website in second window `python genre_detection/ui.py`
+7. Detach from session `Press ctrl b and d`
+
+#### Further usage
+
+1. Connect to session `tmux attach -t beatbot`
+2. Stop service and ui: `ctrl c` in both windows
+3. Start them again
+4. Detach from session
 
 ## Related project
 
