@@ -188,8 +188,34 @@ if __name__ == "__main__":
         BarPlot(x_label="Genre", y_label="Genre Strength", vertical=False),
     ]
 
+    # create a more matching theme than the default one. It uses the colors of hfu and hfm.
+    theme = gradio.themes.Default().set(
+        loader_color=constants.COLOR_HFU,
+        loader_color_dark=constants.COLOR_HFU,
+        button_primary_text_color="#FFFFFF",
+        button_primary_text_color_dark="#FFFFFF",
+        button_primary_background_fill=constants.COLOR_HFU,
+        button_primary_background_fill_dark=constants.COLOR_HFU,
+        button_primary_background_fill_hover=constants.COLOR_HFU_DARK,
+        button_primary_background_fill_hover_dark=constants.COLOR_HFU_DARK,
+        button_primary_border_color="*button_primary_background_fill",
+        button_primary_border_color_dark="*button_primary_background_fill",
+        button_primary_border_color_hover="*button_primary_background_fill_hover",
+        button_primary_border_color_hover_dark="*button_primary_background_fill_hover",
+        button_secondary_text_color="#FFFFFF",
+        button_secondary_text_color_dark="#FFFFFF",
+        button_secondary_background_fill=constants.COLOR_HFM,
+        button_secondary_background_fill_dark=constants.COLOR_HFM,
+        button_secondary_background_fill_hover=constants.COLOR_HFM_DARK,
+        button_secondary_background_fill_hover_dark=constants.COLOR_HFM_DARK,
+        button_secondary_border_color="*button_secondary_background_fill",
+        button_secondary_border_color_dark="*button_secondary_background_fill",
+        button_secondary_border_color_hover="*button_secondary_background_fill_hover",
+        button_secondary_border_color_hover_dark="*button_secondary_background_fill_hover",
+    )
+
     # specify some server arguments
-    gradio_interface_args = {"allow_flagging": "never"}
+    gradio_interface_args = {"allow_flagging": "never", "theme": theme}
     gradio_launch_args = {
         "server_name": "0.0.0.0",
         "server_port": 8080,
