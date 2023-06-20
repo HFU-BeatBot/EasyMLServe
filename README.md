@@ -5,7 +5,47 @@
 <details>
 <summary>Click here when you are interested in how to use the website.</summary>
 
+The website is reachable on port 8080.
+
 ![How To Use Website](assets/how_to_website.png)
+
+</details>
+
+<details>
+<summary>Click here when you are interested in how to use the service.</summary>
+
+The service is reachable on port 8000.
+
+Simply send a JSON Post request to /process:
+
+```
+{
+    "model_to_use": 2, // 0 = "Librosa - GTZAN", 1 = "Librosa - FMA", 2 = "JLibrosa - GTZAN"
+    "music_array": [
+        mfcc_01_mean,mfcc_01_std,...,mfcc_20_mean,mfcc_20_std
+    ]
+}
+```
+
+The service will answer with a response like this:
+
+```
+{
+  "genre": "Metal",
+  "confidences": {
+    "Blues": 0.001,
+    "Classical": 0.002,
+    "Country": 0.005,
+    "Disco": 0.018,
+    "HipHop": 0.0132,
+    "Jazz": 0.0003,
+    "Metal": 0.562,
+    "Pop": 0.0533,
+    "Reggae": 0.025,
+    "Rock": 0.3202
+  }
+}
+```
 
 </details>
 
@@ -86,6 +126,7 @@ Accessing multiple terminals simultaneously can be achieved with [tmux](https://
 ```
 sudo apt install tmux
 ```
+
 #### First setup
 
 1. Create session `tmux new -s beatbot`
