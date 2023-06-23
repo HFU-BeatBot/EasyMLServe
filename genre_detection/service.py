@@ -19,21 +19,29 @@ class GenreDetectionService(EasyMLService):
         # get path of this file
         path_to_folder = os.path.dirname(os.path.abspath(__file__))
 
-        # load gtzan model & scaler
-        self.gtzan_model = tf.keras.models.load_model(
-            path_to_folder + "/gtzan_model.h5"
+        # load librosa gtzan model & scaler
+        self.librosa_gtzan_model = tf.keras.models.load_model(
+            path_to_folder + "/librosa_gtzan_model.h5"
         )
-        self.gtzan_scaler = load(path_to_folder + "/gtzan_scaler.bin")
+        self.librosa_gtzan_scaler = load(path_to_folder + "/librosa_gtzan_scaler.bin")
 
-        # load fma model & scaler
-        self.fma_model = tf.keras.models.load_model(path_to_folder + "/fma_model.h5")
-        self.fma_scaler = load(path_to_folder + "/fma_scaler.bin")
-
-        # load jlibrosa model & scaler
-        self.jlibrosa_model = tf.keras.models.load_model(
-            path_to_folder + "/jlibrosa_model.h5"
+        # load librosa fma model & scaler
+        self.librosa_fma_model = tf.keras.models.load_model(
+            path_to_folder + "/librosa_fma_model.h5"
         )
-        self.jlibrosa_scaler = load(path_to_folder + "/jlibrosa_scaler.bin")
+        self.librosa_fma_scaler = load(path_to_folder + "/librosa_fma_scaler.bin")
+
+        # load jlibrosa gtzan model & scaler
+        self.jlibrosa_gtzan_model = tf.keras.models.load_model(
+            path_to_folder + "/jlibrosa_gtzan_model.h5"
+        )
+        self.jlibrosa_gtzan_scaler = load(path_to_folder + "/jlibrosa_gtzan_scaler.bin")
+
+        # load jlibrosa fma model & scaler
+        self.jlibrosa_fma_model = tf.keras.models.load_model(
+            path_to_folder + "/librosa_fma_model.h5"
+        )
+        self.jlibrosa_fma_scaler = load(path_to_folder + "/librosa_fma_scaler.bin")
 
     def process(self, request: APIRequest) -> APIResponse:
         """Process REST API request and return genre.
@@ -49,21 +57,37 @@ class GenreDetectionService(EasyMLService):
 
         if request.model_to_use == 1:  # Librosa FMA
             main_genre, confidences = self.get_return_values(
-                np_array, self.fma_scaler, self.fma_model
+                np_array,
+                self.librosa_fma_scaler,
+                self.librosa_fma_model,
+                constants.FMA_GENRES,
             )
         elif request.model_to_use == 2:  # JLibrosa GTZAN
             main_genre, confidences = self.get_return_values(
-                np_array, self.jlibrosa_scaler, self.jlibrosa_model
+                np_array,
+                self.jlibrosa_gtzan_scaler,
+                self.jlibrosa_gtzan_model,
+                constants.GTZAN_GENRES,
+            )
+        elif request.model_to_use == 3:  # JLibrosa FMA
+            main_genre, confidences = self.get_return_values(
+                np_array,
+                self.jlibrosa_fma_scaler,
+                self.jlibrosa_fma_model,
+                constants.FMA_GENRES,
             )
         else:  # Librosa GTZAN
             main_genre, confidences = self.get_return_values(
-                np_array, self.gtzan_scaler, self.gtzan_model
+                np_array,
+                self.librosa_gtzan_scaler,
+                self.librosa_gtzan_model,
+                constants.GTZAN_GENRES,
             )
 
         # generate the response as a simple json string
         return {"genre": main_genre, "confidences": confidences}
 
-    def get_return_values(self, np_array, scaler, model, genres=constants.GENRES):
+    def get_return_values(self, np_array, scaler, model, genres=constants.GTZAN_GENRES):
         np_array = scaler.transform(np_array)
         prediction = model.predict(np_array)
         genre = np.argmax(prediction[0])

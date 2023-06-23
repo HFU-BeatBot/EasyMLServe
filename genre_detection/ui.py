@@ -98,7 +98,10 @@ class BeatBotUI(GradioEasyMLUI):
         genre = response["genre"]
         path_to_img = "assets/genres/404.png"  # set default image (only shown when no genre image is available)
 
-        genres = constants.GENRES
+        used_model = request["model_to_use"]
+        genres = constants.GTZAN_GENRES
+        if used_model == 1 or used_model == 3:
+            genres = constants.FMA_GENRES
 
         if genre in genres:
             path_to_img = "assets/genres/" + genre.lower() + ".png"
@@ -177,7 +180,12 @@ if __name__ == "__main__":
         "music_array": TextLong(name="Music Array"),
         "model_to_use": SingleChoice(
             name="Model to use",
-            choices=["Librosa - GTZAN", "Librosa - FMA", "JLibrosa - GTZAN"],
+            choices=[
+                "Librosa - GTZAN",
+                "Librosa - FMA",
+                "JLibrosa - GTZAN",
+                "JLibrosa - FMA",
+            ],
         ),
     }
 

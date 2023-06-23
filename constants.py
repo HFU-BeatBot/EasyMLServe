@@ -1,6 +1,6 @@
 TRAINED_MUSIC_DURATION_IN_SECONDS = 5
 
-GENRES = [
+GTZAN_GENRES = [
     "Blues",
     "Classical",
     "Country",
@@ -10,6 +10,17 @@ GENRES = [
     "Metal",
     "Pop",
     "Reggae",
+    "Rock",
+]
+
+FMA_GENRES = [
+    "Electronic",
+    "Experimental",
+    "Folk",
+    "HipHop",
+    "Instrumental",
+    "International",
+    "Pop",
     "Rock",
 ]
 

@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 class APIRequest(BaseModel):
     model_to_use: int = (
-        2  # 0 = "Librosa - GTZAN", 1 = "Librosa - FMA", 2 = "JLibrosa - GTZAN"
+        2  # 0 = "Librosa - GTZAN", 1 = "Librosa - FMA", 2 = "JLibrosa - GTZAN", 3 = "JLibrosa - FMA"
     )
     music_array: List[float]
 
