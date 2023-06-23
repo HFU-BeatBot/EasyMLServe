@@ -39,9 +39,9 @@ class GenreDetectionService(EasyMLService):
 
         # load jlibrosa fma model & scaler
         self.jlibrosa_fma_model = tf.keras.models.load_model(
-            path_to_folder + "/librosa_fma_model.h5"
+            path_to_folder + "/jlibrosa_fma_model.h5"
         )
-        self.jlibrosa_fma_scaler = load(path_to_folder + "/librosa_fma_scaler.bin")
+        self.jlibrosa_fma_scaler = load(path_to_folder + "/jlibrosa_fma_scaler.bin")
 
     def process(self, request: APIRequest) -> APIResponse:
         """Process REST API request and return genre.
