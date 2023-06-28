@@ -20,7 +20,7 @@ Simply send a JSON Post request to /process:
 
 ```
 {
-    "model_to_use": 2, // 0 = "Librosa - GTZAN", 1 = "Librosa - FMA", 2 = "JLibrosa - GTZAN"
+    "model_to_use": 2, // 0 = "Librosa - GTZAN", 1 = "Librosa - FMA", 2 = "JLibrosa - GTZAN", 3 = "JLibrosa - FMA"
     "music_array": [
         mfcc_01_mean,mfcc_01_std,...,mfcc_20_mean,mfcc_20_std
     ]
@@ -46,6 +46,20 @@ The service will answer with a response like this:
   }
 }
 ```
+
+</details>
+
+<details>
+<summary>Click here when you are interested in the different models.</summary>
+
+Four models are available, which differ in the following points:
+
+- The language in which the mfcc values are generated:
+  - Librosa: The popular Python library for working with audio files.
+  - JLibrosa: The Java counterpart to the Python library, used because it generates slightly different values than Librosa.
+- The data set from which the mfcc values are generated (we split the sound files described below into 5-second parts and added noise, doubling the number of snippets):
+  - GTZAN: 10 genres, 100 audio files, each 30 seconds long.
+  - Free Music Archive (FMA): 8 genres, 1000 audio files, each 30 seconds long.
 
 </details>
 

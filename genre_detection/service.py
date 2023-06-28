@@ -14,7 +14,8 @@ class GenreDetectionService(EasyMLService):
     """Genre detection service."""
 
     def load_model(self):
-        """Loads all models which are used in the service. Called once on start up."""
+        """Called once at startup. Loads all models and scalers used in the service.
+        The scalers transform the received values so that the model can process them."""
 
         # get path of this file
         path_to_folder = os.path.dirname(os.path.abspath(__file__))
@@ -87,13 +88,33 @@ class GenreDetectionService(EasyMLService):
         # generate the response as a simple json string
         return {"genre": main_genre, "confidences": confidences}
 
-    def get_return_values(self, np_array, scaler, model, genres=constants.GTZAN_GENRES):
+    def get_return_values(
+        self, np_array, scaler, model, genres=constants.GTZAN_GENRES
+    ) -> tuple[str, dict]:
+        """Process the np_array with the mfcc values and return the main_genre as str and dictionary with the confidences
+
+        Args:
+            np_array (np_array): mfcc values
+            scaler: The scaler to use with the model
+            model: The model used to predict the genres
+            genres (list[str], optional): The genres which are returned by the model. Defaults to constants.GTZAN_GENRES.
+
+        Returns:
+            tuple[str, dict]: main_genre and confidences with genres as keys
+        """
+
+        # up or downscale the values to match the trainigs data
         np_array = scaler.transform(np_array)
+
+        # get the prediction
         prediction = model.predict(np_array)
+
+        # get the highest value, as this is the main genre
         genre = np.argmax(prediction[0])
 
         confidences = dict()
 
+        # enter all the confidences into the dict
         for x in range(len(genres)):
             confidences[genres[x]] = float(prediction[0][x])
 
