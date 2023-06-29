@@ -72,17 +72,15 @@ class BeatBotUI(GradioEasyMLUI):
 
         return self.process_response(request, response)
 
-    def prepare_request(
-        self, music_array: str, model_to_use: int
-    ) -> APIRequest:  ###TODO: music_array str?
+    def prepare_request(self, music_array: list, model_to_use: int) -> APIRequest:
         """Create a simple json string that will be send to the service/server
 
         Args:
-            music_array (str): Array of all 20 mfcc values mean and std
+            music_array (list): Array of all 20 mfcc values mean and std
             model_to_use (int): The model which should be used by the service/server for interpreting
 
         Returns:
-            APIRequest: json string
+            APIRequest: json string ready to send to the service
         """
 
         return {"model_to_use": model_to_use, "music_array": music_array}
@@ -133,7 +131,7 @@ class BeatBotUI(GradioEasyMLUI):
             list: List of mfcc lists
         """
 
-        max_duration = constants.TRAINED_MUSIC_DURATION_IN_SECONDS # snippet length
+        max_duration = constants.TRAINED_MUSIC_DURATION_IN_SECONDS  # snippet length
         offset = 0
         song_duration = librosa.get_duration(path=file)
 
