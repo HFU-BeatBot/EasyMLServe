@@ -27,18 +27,16 @@ The service will answer with a response like this:
 
 ```
 {
-  "genre": "Metal",
+  "genre": "Folk",
   "confidences": {
-    "Blues": 0.001,
-    "Classical": 0.002,
-    "Country": 0.005,
-    "Disco": 0.018,
-    "HipHop": 0.0132,
-    "Jazz": 0.0003,
-    "Metal": 0.562,
-    "Pop": 0.0533,
-    "Reggae": 0.025,
-    "Rock": 0.3202
+    "Electronic": 0.03255925909317552,
+    "Experimental": 0.25040334119246555,
+    "Folk": 0.41365239093414485,
+    "HipHop": 0.06541446814588152,
+    "Instrumental": 0.06807809042033906,
+    "International": 0.07369756385779534,
+    "Pop": 0.07780601926004657,
+    "Rock": 0.018388872916917674
   }
 }
 ```
