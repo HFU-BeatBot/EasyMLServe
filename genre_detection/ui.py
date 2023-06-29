@@ -31,6 +31,7 @@ class BeatBotUI(GradioEasyMLUI):
         music_array = parent_kwargs["music_array"]
         model_to_use = parent_kwargs["model_to_use"]
 
+        # if music file is uploaded
         if file:
             arrays = self.preprocess_music(file)
             sum_array = {}
@@ -56,6 +57,7 @@ class BeatBotUI(GradioEasyMLUI):
             # Delete the temorary file
             os.remove(file)
 
+        # if mfcc values are inputed
         elif music_array:
             request = self.prepare_request(**parent_kwargs)
             response = self.call_process_api(request)
@@ -130,7 +132,7 @@ class BeatBotUI(GradioEasyMLUI):
             list: List of mfcc lists
         """
 
-        max_duration = constants.TRAINED_MUSIC_DURATION_IN_SECONDS
+        max_duration = constants.TRAINED_MUSIC_DURATION_IN_SECONDS # snippet length
         offset = 0
         song_duration = librosa.get_duration(path=file)
 

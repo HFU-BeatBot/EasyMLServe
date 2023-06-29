@@ -1,15 +1,11 @@
 # EasyMLServe
 
-## Use the website
+This application is based on the [EasyMLServe](https://github.com/KIT-IAI/EasyMLServe/) Projekt from KIT and we used it as a case study to test the usability of an easy usage of machine learning models in the musical environment.<br>
+It consists of a service, which is the core of the app and an user interface (website), that is used for testing and accessing the service.<br>
+The service hosts multiple machine learning models on a server, that can be accessed via a REST API.<br>
+The goal is that many different applications can access these ml models through the API.
 
-<details>
-<summary>Click here when you are interested in how to use the website.</summary>
-
-The website is reachable on port 8080.
-
-![How To Use Website](assets/how_to_website.png)
-
-</details>
+## How to use the service and the website
 
 <details>
 <summary>Click here when you are interested in how to use the service.</summary>
@@ -46,6 +42,15 @@ The service will answer with a response like this:
   }
 }
 ```
+
+</details>
+
+<details>
+<summary>Click here when you are interested in how to use the website.</summary>
+
+The website is reachable on port 8080.
+
+![How To Use Website](assets/how_to_website.png)
 
 </details>
 
