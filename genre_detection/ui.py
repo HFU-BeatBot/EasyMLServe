@@ -59,7 +59,8 @@ class BeatBotUI(GradioEasyMLUI):
 
         # if mfcc values are inputed
         elif music_array:
-            request = self.prepare_request(**parent_kwargs)
+            array = music_array.split(",")
+            request = self.prepare_request(array, model_to_use)
             response = self.call_process_api(request)
 
         else:
